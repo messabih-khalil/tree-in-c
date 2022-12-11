@@ -29,11 +29,17 @@ int searchNode(int value, TreeNode *tree);
 
 // min value of tree
 
-int minValue(TreeNode *tree);
+TreeNode * minValue(TreeNode *tree);
 
 // max value of tree
 
 int maxValue(TreeNode *tree);
 
+
+// insert in th tree
 TreeNode *insertNewNode(TreeNode *tree, int value);
+
+// remove from the tree
+
+TreeNode *deleteNode(TreeNode *root, int value);
 #endif

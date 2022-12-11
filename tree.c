@@ -1,7 +1,7 @@
 #include "tree.h"
 #include <stdio.h>
-#include <stdlib.h> // rand(), srand()
-#include <time.h>   // time()
+#include <stdlib.h>
+#include <time.h>
 #define VALEUR_MAX 100000
 //  global variable
 
@@ -99,11 +99,11 @@ int searchNode(int value, TreeNode *tree) {
 
 // min value of tree
 
-int minValue(TreeNode *tree) {
+TreeNode *minValue(TreeNode *tree) {
   while (tree->leftChild != NULL) {
     tree = tree->leftChild;
   }
-  return tree->data;
+  return tree;
 }
 
 // max value of tree
@@ -113,6 +113,38 @@ int maxValue(TreeNode *tree) {
     tree = tree->rightChild;
   }
   return tree->data;
+}
+
+TreeNode *deleteNode(TreeNode *root, int value) {
+
+  if (root == NULL)
+    return root;
+
+  if (value < root->data)
+    root->leftChild = deleteNode(root->leftChild, value);
+
+  else if (value > root->data)
+    root->rightChild = deleteNode(root->rightChild, value);
+
+  else {
+    // node with only one child or no child
+    if (root->leftChild == NULL) {
+      TreeNode *temp = root->rightChild;
+      free(root);
+      return temp;
+    } else if (root->rightChild == NULL) {
+      TreeNode *temp = root->leftChild;
+      free(root);
+      return temp;
+    }
+
+    TreeNode *temp = minValue(root->rightChild);
+
+    root->data = temp->data;
+
+    root->rightChild = deleteNode(root->rightChild, temp->data);
+  }
+  return root;
 }
 
 int main() {
@@ -154,8 +186,8 @@ int main() {
       inOrder(root);
       printf("\n\n");
     } else if (res == 3) {
-      int min = minValue(root);
-      printf("\n\n min value is : %d", min);
+      TreeNode *min = minValue(root);
+      printf("\n\n min value is : %d", min->data);
     } else if (res == 4) {
       int max = maxValue(root);
       printf("\n\n max value is : %d", max);
@@ -173,10 +205,18 @@ int main() {
       }
     } else if (res == 5) {
       printf("\n\n The height of tree is : %d", treeHeight(root));
+    } else if (res == 10) {
+      int value;
+      printf("\n\n What's the value you want to remove : ");
+      scanf("%d", &value);
+
+      if (searchNode(value, root)) {
+        root = deleteNode(root, value);
+      } else {
+        printf("\n\n The Value is not exist in the Tree");
+      }
     }
   } while (res > 0 && res < 11);
-
-  // inOrder(root);
 
   return 0;
 }
